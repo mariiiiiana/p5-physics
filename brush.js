@@ -4,13 +4,28 @@ class Brush {
     this.body = Matter.Bodies.circle(x, y, r);
     this.body.restitution = 0.9;
     this.color = color(random(255), random(255), random(255));
-  }
+
+    // subscrribe to collision events
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+        let pairs = event.pairs;
+        for (let pair of pairs) { 
+            if (pair.bodyA === this.body || pair.bodyB === this.body) {
+                this.changeColor();
+            }
+        }
+    });  
+}
+
 
   show() {
     this.keepInBounds();
     noStroke();
     fill(this.color);
     circle(this.body.position.x, this.body.position.y, this.radius * 2);
+  }
+
+  changeColor() {
+    this.color = color(random(255), random(255), random(255));
   }
 
   keepInBounds() {

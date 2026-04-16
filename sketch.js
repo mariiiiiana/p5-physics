@@ -31,13 +31,25 @@ function setup() {
 }
 
 function draw() {
-  // background(220);
+  //background(220);
 
   Engine.update(engine);
 
   for (let i = 0; i < brushes.length; i++) {
     brushes[i].show();
   }
+  console.log(rotationX, rotationY, rotationZ);
+
+  let gravityX = map(rotationX, PI, -PI, -1, 1);
+  engine.world.gravity.x = gravityX;
+
+  let gravityY = map(rotationY, PI, -PI, -1, 1);
+  engine.world.gravity.y = gravityY;
+
+  let gravityZ = map(rotationZ, PI, -PI, -1, 1);
+  engine.world.gravity.z = gravityZ;
 
   obstacle.show();
+  
+  Engine.update(engine);
 }
