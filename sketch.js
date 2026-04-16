@@ -28,6 +28,25 @@ function setup() {
   );
 
   Composite.add(engine.world, obstacle.body);
+  let button = createButton('Request Sensor Access');
+ button.position(10, 10);
+ button.mousePressed(() => {
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+   DeviceOrientationEvent.requestPermission().then(permissionState => {
+    if (permissionState === 'granted') {
+     console.log('Orientation permission granted');
+    }
+   }).catch(console.error);
+  }
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+   DeviceMotionEvent.requestPermission().then(permissionState => {
+    if (permissionState === 'granted') {
+     console.log('Motion permission granted');
+    }
+   }).catch(console.error);
+  }
+  button.remove();
+ });
 }
 
 function draw() {
@@ -40,16 +59,16 @@ function draw() {
   }
   console.log(rotationX, rotationY, rotationZ);
 
-  let gravityX = map(rotationX, PI, -PI, -1, 1);
+  let gravityX = map(rotationX, PI, -PI, -4, 4);
   engine.world.gravity.x = gravityX;
 
-  let gravityY = map(rotationY, PI, -PI, -1, 1);
+  let gravityY = map(rotationY, PI, -PI, -4, 4);
   engine.world.gravity.y = gravityY;
 
-  let gravityZ = map(rotationZ, PI, -PI, -1, 1);
+  let gravityZ = map(rotationZ, PI, -PI, -4, 4);
   engine.world.gravity.z = gravityZ;
 
   obstacle.show();
-  
+
   Engine.update(engine);
 }
