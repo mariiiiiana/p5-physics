@@ -1,26 +1,46 @@
-let Engine = Matter.Engine, // motore fisico
-    Bodies = Matter.Bodies; //oggetti fisici
-    Composite = Matter.Composite; // insieme di tutti i bodies
+let Engine = Matter.Engine,
+    Bodies = Matter.Bodies,
+    Body = Matter.Body,
+    Composite = Matter.Composite;
 
 let engine;
 let brush;
-
+let obstacle;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  engine = Engine.create(); //creazione del motore
+  engine = Engine.create();
 
-  brush = Bodies.circle (width / 2, height / 4, 50,); //creazione di un cerchio con rimbalzo
+  brush = Bodies.circle(width / 2, height / 4, 50);
 
-  Composite.add(engine.world, brush); //aggiunta del cerchio al mondo fisico
+  obstacle = Bodies.rectangle(width / 2, 600, 300, 50, {
+    isStatic: true
+  });
+
+  Body.setAngle(obstacle, PI / 4); // 45 gradi
+
+  console.log(obstacle);
+
+  Composite.add(engine.world, [brush, obstacle]);
 }
 
 function draw() {
   background(220);
 
+  Engine.update(engine);
+
+  // cerchio
   noStroke();
   fill(255, 0, 0);
-  circle( brush.position.x, brush.position.y, brush.circleRadius * 2); //disegno del cerchio
+  circle(brush.position.x, brush.position.y, brush.circleRadius * 2);
 
-  Engine.update(engine); // aggiornamento del motore
+  // rettangolo ruotato
+  rectMode(CENTER);
+  fill(0, 255, 0);
+
+  push();
+  translate(obstacle.position.x, obstacle.position.y);
+  rotate(obstacle.angle);
+  rect(0, 0, 300, 50);
+  pop();
 }
