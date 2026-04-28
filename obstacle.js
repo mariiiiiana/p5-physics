@@ -1,4 +1,4 @@
-class Obstacle {
+// class Obstacle {
   constructor(x, y, width, height, options = {}, angle = 0) {
     this.width = width;
     this.height = height;
@@ -10,14 +10,16 @@ class Obstacle {
     Matter.Body.setAngle(this.body, angle);
   }
 
-  show() {
-    rectMode(CENTER);
-    fill(0, 255, 0);
+  show(g) {
+    let draw = g || window;
+    draw.rectMode(draw.CENTER);
+    draw.fill(0, 255, 0);
 
-    push();
-    translate(this.body.position.x, this.body.position.y);
-    rotate(this.body.angle);
-    rect(0, 0, this.width, this.height);
-    pop();
+    draw.push();
+    draw.translate(this.body.position.x / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1),
+                   this.body.position.y / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1));
+    draw.rotate(this.body.angle);
+    draw.rect(0, 0, this.width / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1), this.height / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1));
+    draw.pop();
   }
 }

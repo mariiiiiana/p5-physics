@@ -4,7 +4,8 @@ class Brush {
     this.body = Matter.Bodies.circle(x, y, r);
     this.body.restitution = 0.9;
     this.body.frictionAir = 0.002;
-    this.color = color(random(255), random(255), random(255));
+    // use limited palette when available
+    this.color = (typeof pickPalette === 'function') ? pickPalette() : color(random(255), random(255), random(255));
     // collision categories: default(0x0001), brush(0x0002), particle(0x0004)
     const CATEGORY_DEFAULT = 0x0001;
     const CATEGORY_BRUSH = 0x0002;
@@ -25,15 +26,18 @@ class Brush {
 }
 
 
-  show() {
+  show(g) {
     this.keepInBounds();
-    noStroke();
-    fill(this.color);
-    circle(this.body.position.x, this.body.position.y, this.radius * 2);
+    let draw = g || window;
+    draw.noStroke();
+    draw.fill(this.color);
+    draw.circle(this.body.position.x / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1),
+                this.body.position.y / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1),
+                this.radius * 2 / (typeof PIXEL_SCALE !== 'undefined' ? PIXEL_SCALE : 1));
   }
 
   changeColor() {
-    this.color = color(random(255), random(255), random(255));
+    this.color = (typeof pickPalette === 'function') ? pickPalette() : color(random(255), random(255), random(255));
   }
 
   explode(otherBody) {
